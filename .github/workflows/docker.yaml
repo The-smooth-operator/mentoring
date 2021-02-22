@@ -19,8 +19,17 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: 783633885093.dkr.ecr.us-west-2.amazonaws.com
+      - name: docker-tags
+        id: tags
+        run: |
+          DOCKER_IMAGE=783633885093.dkr.ecr.us-west-2.amazonaws.com/mentoring
+          VERSION=latest
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=tags::${TAGS}
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          repository: 783633885093.dkr.ecr.us-west-2.amazonaws.com/mentoring
-          tag_with_ref: true
+          tags: ${{ steps.tags.outputs.tags }}
