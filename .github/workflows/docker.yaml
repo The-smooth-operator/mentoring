@@ -19,7 +19,8 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Push to Docker Hub
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
+          registry: ${{ steps.login-ecr.outputs.registry }}
           repository: 783633885093.dkr.ecr.us-west-2.amazonaws.com/mentoring
           tag_with_ref: true
